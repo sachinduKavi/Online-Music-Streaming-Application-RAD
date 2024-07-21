@@ -39,6 +39,7 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    box-shadow: 0 0 25px 10px rgba(192, 191, 191, 0.096);
 }
 
 .column {
@@ -56,11 +57,17 @@
     padding: 20px;
     background-color: rgba(0, 0, 0, 0.13);
     flex-direction: column;
+    justify-content: space-evenly;
 }
 
 .music-description label {
-    margin-top: 15px;
+    font-size: 15px; 
+    margin-top: 8px;
    
+}
+
+.music-description h3 {
+    font-size: 1.2vw;
 }
 
 .music-controls {

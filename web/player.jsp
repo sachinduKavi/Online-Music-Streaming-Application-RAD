@@ -9,10 +9,14 @@
 <!DOCTYPE html>
 <%
 String musicID = request.getParameter("musicID");
-Music music = new Music("MU0000000000000001");
-//music.fetchValuesFromDatabase(); // Fetch values from database
+if(musicID == null) {
+    musicID = "MU0000000000000001";
+}
+Music music = new Music(musicID);
+music.fetchValuesFromDatabase(); // Fetch values from database
 
-System.out.println(music.getMusicID() + "This is form me");
+
+music.getNextRecord();
 %>
 <html>
     <head>
@@ -54,36 +58,45 @@ System.out.println(music.getMusicID() + "This is form me");
         <div class="container">
              <div class="row">
                 <h3>Now Playing....</h3>
-                <h1 class="music-title"></h1>
-                <h3 class="artist-name"></h3>
+                <h1 class="music-title"><%=music.getMusicName() %></h1>
+                <h3 class="artist-name"><%=music.getArtistName() %></h3>
              </div>
 
              <div class="row player-row">
-                <div class="cover-image column">
+                <div class="cover-image column" style="background: url('<%=music.getCoverURL()%>'); background-size: cover; background-repeat: no-repeat; background-position: center">
 
                 </div>
                  
 
                 <div class="music-description column">
                     <label for="">Music Name:</label>
-                    <h3>Despacito daddy yanki</h3>
+                    <h3><%=music.getMusicName() %></h3>
 
                     <label for="">Artist</label>
-                    <h3>Despacito daddy yanki</h3>
+                    <h3><%=music.getArtistName() %></h3>
+
+                    <label for="">Duration</label>
+                    <h3 id="duration"></h3>
+                    
+                    <label for="">Rating</label>
+                    <h3><%=music.getRating() %></h3>
+                    
+                    <label for="">Language</label>
+                    <h3><%=music.getLanguage() %></h3>
                 </div>
                  
              </div>
 
             <div class="row music-controls">
-                 <audio src="https://firebasestorage.googleapis.com/v0/b/beatboxify-rad.appspot.com/o/audio%2FAala%20Lawan%20%20%E0%B6%86%E0%B6%BD%20%E0%B6%BD%E0%B7%80%E0%B6%B1%E0%B7%8A%20-%20Sanjula%20Himala%20ft%20Dulan%20ARX%20(Official%20Music%C2%A0Video).mp3?alt=media&token=8f0998a6-28fa-45f6-a5d1-d37f4e24f0d0" autoplay="1" controls id="audio" style="visibility: hidden"></audio>
+                 <audio src="<%=music.getSourceURL()%>" autoplay="1" controls id="audio" style="visibility: hidden"></audio>
                 
                  <input type="range" value="0" max="100" class="seek-bar" id="seek-bar">
                 
 
                  <div class="controller">
-                    <button class="control-btn"><img src="assets/icons/previous.png" alt="" width="50px"></button>
+                    <button class="control-btn" onclick="changePrev()"><img src="assets/icons/previous.png" alt="" width="50px"></button>
                     <button class="control-btn" id="play-pause"><img src="assets/icons/play.png" alt="" width="70px" id="play-icon"></button>
-                    <button class="control-btn"><img src="assets/icons/next.png" alt="" width="50px"></button>
+                    <button class="control-btn" onclick="changeNext()"><img src="assets/icons/next.png" alt="" width="50px"></button>
                  </div>
             </div>
 
@@ -92,14 +105,30 @@ System.out.println(music.getMusicID() + "This is form me");
     </body>
 
     <script>
+        function changeNext() {
+            window.location.href = 'player.jsp?musicID=<%=music.getNextRecord() %>'
+        }
+        
+        function changePrev() {
+            window.location.href = 'player.jsp?musicID=<%=music.getPreviousRecord() %>'
+        }
+        
 
         document.addEventListener('DOMContentLoaded', () => {
             const audio = document.getElementById('audio')
             const seekBar = document.getElementById('seek-bar')
 
+            
+
+            audio.addEventListener('canplay', () => {
+                document.getElementById('duration').innerHTML = audio.duration.toFixed(2) + " sec"
+                audio.play()
+                document.getElementById('play-icon').src = 'assets/icons/paused.png'
+            })
 
             audio.addEventListener('timeupdate', () => {
                 seekBar.value = (audio.currentTime / audio.duration) * 100
+                
             })
 
             seekBar.addEventListener('input', ()=> {
@@ -116,7 +145,8 @@ System.out.println(music.getMusicID() + "This is form me");
                     document.getElementById('play-icon').src = 'assets/icons/play.png'
                 }
             })
-
+            
+            audio.onended = changeNext
         
         })
     </script>

@@ -128,7 +128,63 @@ public class Music {
         
         return false;
     }
-
+    
+    public String getPreviousRecord() {
+        int idNum = Integer.valueOf(this.musicID.substring(2));
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement("SELECT music_ID FROM music WHERE CAST(substr(music_ID, 3) AS INT) < ? ORDER BY music_ID DESC LIMIT 1");
+            stmt.setInt(1, idNum);
+            ResultSet rs = stmt.executeQuery();
+            
+            if(rs.next()) {
+                System.out.println("Music ID" + rs.getString("music_ID"));
+                return rs.getString("music_ID");
+            } else {
+                System.out.println("Empty");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Music.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        PreparedStatement stmt2;
+        try {
+            stmt2 = this.conn.prepareStatement("SELECT music_ID FROM music ORDER BY music_ID DESC LIMIT 1");
+            ResultSet rs2 = stmt2.executeQuery();
+            if(rs2.next())
+                return rs2.getString("music_ID");
+        } catch (SQLException ex) {
+            Logger.getLogger(Music.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return "MU0000000000000001";
+        
+    }
+    
+    
+    public String getNextRecord() {
+        int idNum = Integer.valueOf(this.musicID.substring(2));
+        System.out.println("MY TEsting " + idNum);
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement("SELECT music_ID FROM music WHERE CAST(substr(music_ID, 3) AS INT) > ? ORDER BY music_ID ASC LIMIT 1");
+            stmt.setInt(1, idNum);
+            ResultSet rs = stmt.executeQuery();
+            
+            if(rs.next()) {
+                System.out.println("Music ID" + rs.getString("music_ID"));
+                return rs.getString("music_ID");
+            } else {
+                System.out.println("Empty");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Music.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        return "MU0000000000000001";
+    }
+    
+    // Gettters & setters
     public Connection getConn() {
         return conn;
     }
