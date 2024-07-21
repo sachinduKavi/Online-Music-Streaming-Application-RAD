@@ -1,0 +1,89 @@
+.container {
+    display: flex;
+    flex-direction: column; 
+}
+
+.container .row {
+    width: 100%;
+    flex: 1 1 0;
+    margin: 5px 0;
+    padding: 3%;
+}
+
+.container .player-row {
+    position: relative ;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    flex: 0 0 calc(40%);
+    justify-content: space-evenly;
+}
+
+.music-title {
+    font-size: 3.4vw;
+    font-family: cursive;
+}
+
+.artist-name {
+    font-size: 2vw;
+    font-family: cursive;
+}
+
+.cover-image {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex-grow: 0;
+    aspect-ratio: 1;
+    background:url('https://m.media-amazon.com/images/M/MV5BMjAwNTE2MDMyMl5BMl5BanBnXkFtZTgwMjAyODM3MTI@._V1_FMjpg_UX1000_.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.column {
+    display: flex;
+   flex-direction: column;
+   /*flex: 1 1 0;*/
+}
+
+.music-description {
+    /* background-color: blue; */
+    flex: 0 1 calc(45%);
+    border-radius: 20px;
+    border: 2px solid #00FAFA;
+    display: flex;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.13);
+    flex-direction: column;
+}
+
+.music-description label {
+    margin-top: 15px;
+   
+}
+
+.music-controls {
+    display: flex;
+    flex-direction: column;
+}
+
+#seek-bar {
+    background: black;
+
+}
+
+.controller {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.control-btn {
+    background: transparent;
+    border: 0;
+    box-shadow: 0;
+    margin: 0 20px;
+}

@@ -1,0 +1,39 @@
+table {
+    width: fit-content;
+}
+
+table tr th {
+    text-align: left;
+    font-size: 25px;
+}
+form {
+    width: fit-content;
+}
+
+input {
+    width: 300px;
+    background-color: darkcyan;
+    border: 0;
+    outline: 0;
+    font-size: 18px;
+}
+
+input:focus {
+    border: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.submit-btn {
+    background-color: red;
+    padding: 10px;
+    margin: 50px auto; 
+    font-size: 20px; 
+} 
+

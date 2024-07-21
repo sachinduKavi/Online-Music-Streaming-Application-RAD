@@ -13,7 +13,7 @@ and open the template in the editor.
     padding: 0;
     margin: 0;
     color: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: cursive;
 }
 
 
@@ -60,6 +60,8 @@ body {
     cursor: pointer;
     font-weight: bold;
 }
+
+
 
 
 .logout-btn {
