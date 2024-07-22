@@ -9,12 +9,25 @@
 <!DOCTYPE html>
 <%
 String musicID = request.getParameter("musicID");
+HttpSession sessionValue = request.getSession();
+
 if(musicID == null) {
+    if(sessionValue.getAttribute("current-music") != null) {
+       musicID = (String)sessionValue.getAttribute("current-music");
+    } else 
     musicID = "MU0000000000000001";
 }
 Music music = new Music(musicID);
 music.fetchValuesFromDatabase(); // Fetch values from database
 
+// Set volume 
+Integer volume = Integer.valueOf(request.getParameter("v"));
+if(volume == null) {
+    volume = 90;
+}
+
+// Update session current music ID
+session.setAttribute("current-music", musicID);
 
 music.getNextRecord();
 %>
@@ -44,6 +57,7 @@ music.getNextRecord();
                 <ul>
                     <li>App Gallery</li>
                     <li>Play List</li>
+                    <li><a href="player.jsp">Music Player</a></li>
                     <li>About</li>
                 </ul>
                     
@@ -94,9 +108,18 @@ music.getNextRecord();
                 
 
                  <div class="controller">
+                    <div class="more-options mini-controller">
+                        
+                    </div>
+
                     <button class="control-btn" onclick="changePrev()"><img src="assets/icons/previous.png" alt="" width="50px"></button>
                     <button class="control-btn" id="play-pause"><img src="assets/icons/play.png" alt="" width="70px" id="play-icon"></button>
                     <button class="control-btn" onclick="changeNext()"><img src="assets/icons/next.png" alt="" width="50px"></button>
+                    
+                    <div class="volume-controller mini-controller">
+                        <label for="">Volume</label>
+                        <input type="range" id="volume-bar" max="100" value="<%=volume %>">
+                    </div>
                  </div>
             </div>
 
@@ -106,22 +129,24 @@ music.getNextRecord();
 
     <script>
         function changeNext() {
-            window.location.href = 'player.jsp?musicID=<%=music.getNextRecord() %>'
+            window.location.href = 'player.jsp?musicID=<%=music.getNextRecord() %>&v=' + document.getElementById('volume-bar').value
         }
         
         function changePrev() {
-            window.location.href = 'player.jsp?musicID=<%=music.getPreviousRecord() %>'
+            window.location.href = 'player.jsp?musicID=<%=music.getPreviousRecord() %>&v=' + document.getElementById('volume-bar').value
         }
         
 
         document.addEventListener('DOMContentLoaded', () => {
             const audio = document.getElementById('audio')
             const seekBar = document.getElementById('seek-bar')
+            const volumeBar = document.getElementById('volume-bar')
 
-            
+            audio.volume = '<%=volume*0.01 %>'
 
             audio.addEventListener('canplay', () => {
                 document.getElementById('duration').innerHTML = audio.duration.toFixed(2) + " sec"
+                
                 audio.play()
                 document.getElementById('play-icon').src = 'assets/icons/paused.png'
             })
@@ -129,6 +154,10 @@ music.getNextRecord();
             audio.addEventListener('timeupdate', () => {
                 seekBar.value = (audio.currentTime / audio.duration) * 100
                 
+            })
+
+            volumeBar.addEventListener('input', () => {
+                audio.volume = volumeBar.value * 0.01
             })
 
             seekBar.addEventListener('input', ()=> {

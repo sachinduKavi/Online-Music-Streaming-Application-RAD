@@ -85,6 +85,7 @@ music.getNextRecord();
       out.write("                <ul>\n");
       out.write("                    <li>App Gallery</li>\n");
       out.write("                    <li>Play List</li>\n");
+      out.write("                    <li><a href=\"player.jsp\">Music Player</a></li>\n");
       out.write("                    <li>About</li>\n");
       out.write("                </ul>\n");
       out.write("                    \n");
