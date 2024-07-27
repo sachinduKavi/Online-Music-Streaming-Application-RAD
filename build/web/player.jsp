@@ -4,12 +4,22 @@
     Author     : Sachindu Kavishka
 --%>
 
+<%@page import="app.classes.User"%>
 <%@page import="app.classes.Music"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%
+    
 String musicID = request.getParameter("musicID");
 HttpSession sessionValue = request.getSession();
+
+
+sessionValue.setAttribute("user_ID", "US0000000000000001");
+
+// New user object
+User user = new User((String)sessionValue.getAttribute("user_ID"));
+user.fetchUserDetails();
+
 
 if(musicID == null) {
     if(sessionValue.getAttribute("current-music") != null) {
@@ -20,16 +30,17 @@ if(musicID == null) {
 Music music = new Music(musicID);
 music.fetchValuesFromDatabase(); // Fetch values from database
 
+// Check whether music is fav
+boolean favState = music.favCheck(user.getUserID());
+
+
 // Set volume 
-Integer volume = Integer.valueOf(request.getParameter("v"));
-if(volume == null) {
-    volume = 90;
-}
+int volume = (request.getParameter("v") != null)? Integer.valueOf(request.getParameter("v")): 90;
 
 // Update session current music ID
 session.setAttribute("current-music", musicID);
 
-music.getNextRecord();
+
 %>
 <html>
     <head>
@@ -47,16 +58,17 @@ music.getNextRecord();
                 <img src="assets/icons/logo.png" alt="logo-image" width="50%"/>
             
                 <h2>MUSIC STREAMING</h2>
-                <h3>Sachindu Kavishka</h3>
-                <h4>US0000000000001</h4>
+                <h3><%=user.getEmail() %></h3>
+                <h4><%=user.getUserName() %></h4>
+                <h5><%=user.getUserID() %></h5>
 
             </div>
 
 
             <div class="navigation-elements">
                 <ul>
-                    <li>App Gallery</li>
-                    <li>Play List</li>
+                    <li>Music Gallery</li>
+                    <li><a href="playlist.jsp">My Playlist</a></li>
                     <li><a href="player.jsp">Music Player</a></li>
                     <li>About</li>
                 </ul>
@@ -107,8 +119,12 @@ music.getNextRecord();
                  <input type="range" value="0" max="100" class="seek-bar" id="seek-bar">
                 
 
-                 <div class="controller">
-                    <div class="more-options mini-controller">
+                 <div class="controller"> 
+
+
+                    <div class="more-options left-contoler mini-controller">
+                        <button class="control-btn" id='save-btn'><img src="assets/icons/like.png" alt="" width="30px" id='save-icon'></button>
+                        <button class="control-btn" id="stop-btn"><img src="assets/icons/stop.png" alt="" width="30px"></button>
                         
                     </div>
 
@@ -128,6 +144,28 @@ music.getNextRecord();
     </body>
 
     <script>
+        
+        function saveMusic() {
+            console.log('music saved')
+//            window.open('changeSavedMusic.jsp')
+            fetch("changeSavedMusic.jsp?userID=<%=user.getUserID()%>&musicID=<%=music.getMusicID()%>").then(success => {
+                console.log(success);
+            }).catch(e => {
+                console.log(e)
+            })
+        }
+        
+        
+        function unsaveMusic() {
+            console.log('unsave music')
+            fetch("unsaveMusic.jsp?userID=<%=user.getUserID()%>&musicID=<%=music.getMusicID()%>").then(success => {
+                console.log(success);
+            }).catch(e => {
+                console.log(e)
+            })
+        }
+            
+        
         function changeNext() {
             window.location.href = 'player.jsp?musicID=<%=music.getNextRecord() %>&v=' + document.getElementById('volume-bar').value
         }
@@ -141,8 +179,34 @@ music.getNextRecord();
             const audio = document.getElementById('audio')
             const seekBar = document.getElementById('seek-bar')
             const volumeBar = document.getElementById('volume-bar')
+            
+            const stopBtn = document.getElementById('stop-btn')
+            const saveBtn = document.getElementById('save-btn')
 
             audio.volume = '<%=volume*0.01 %>'
+            
+            let saveState = <%=favState %>
+            if(saveState) {
+                document.getElementById('save-icon').src = 'assets/icons/heart.png'
+            }
+                
+            saveBtn.addEventListener('click', () => {
+                if(saveState){
+                    saveState = false
+                    unsaveMusic()
+                    document.getElementById('save-icon').src = 'assets/icons/like.png'
+                }else {
+                    saveState = true
+                    saveMusic()
+                    document.getElementById('save-icon').src = 'assets/icons/heart.png'
+               }
+        })
+            
+            stopBtn.addEventListener('click', () => {
+                audio.currentTime = 0
+                document.getElementById('play-icon').src = 'assets/icons/play.png'
+                audio.pause();
+            })
 
             audio.addEventListener('canplay', () => {
                 document.getElementById('duration').innerHTML = audio.duration.toFixed(2) + " sec"

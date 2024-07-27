@@ -62,7 +62,10 @@ body {
 }
 
 
-
+.navigation-elements a {
+    text-decoration: none;
+    color: inherit; 
+}
 
 .logout-btn {
     background-color: red;

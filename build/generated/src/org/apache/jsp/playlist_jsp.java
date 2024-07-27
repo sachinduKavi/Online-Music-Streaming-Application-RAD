@@ -3,12 +3,14 @@ package org.apache.jsp;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.jsp.*;
+import java.util.List;
 import app.classes.User;
 import app.classes.Music;
 
-public final class player_jsp extends org.apache.jasper.runtime.HttpJspBase
+public final class playlist_jsp extends org.apache.jasper.runtime.HttpJspBase
     implements org.apache.jasper.runtime.JspSourceDependent {
 
+int colorDec = 1127013;
   private static final JspFactory _jspxFactory = JspFactory.getDefaultFactory();
 
   private static java.util.List<String> _jspx_dependants;
@@ -48,9 +50,10 @@ public final class player_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\n");
       out.write("\n");
       out.write("\n");
+      out.write("\n");
       out.write("<!DOCTYPE html>\n");
 
-    
+// Load current user
 String musicID = request.getParameter("musicID");
 HttpSession sessionValue = request.getSession();
 
@@ -60,29 +63,13 @@ sessionValue.setAttribute("user_ID", "US0000000000000001");
 // New user object
 User user = new User((String)sessionValue.getAttribute("user_ID"));
 user.fetchUserDetails();
+    
+// Load all favoutite music 
+List<Music> musicList = Music.fetchFavouriteMusic(user.getUserID());
 
 
-if(musicID == null) {
-    if(sessionValue.getAttribute("current-music") != null) {
-       musicID = (String)sessionValue.getAttribute("current-music");
-    } else 
-    musicID = "MU0000000000000001";
-}
-Music music = new Music(musicID);
-music.fetchValuesFromDatabase(); // Fetch values from database
-
-// Check whether music is fav
-boolean favState = music.favCheck(user.getUserID());
-
-
-// Set volume 
-int volume = (request.getParameter("v") != null)? Integer.valueOf(request.getParameter("v")): 90;
-
-// Update session current music ID
-session.setAttribute("current-music", musicID);
-
-
-
+      out.write("\n");
+      out.write("\n");
       out.write("\n");
       out.write("<html>\n");
       out.write("    <head>\n");
@@ -90,7 +77,7 @@ session.setAttribute("current-music", musicID);
       out.write("        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
       out.write("        <title>JSP Page</title>\n");
       out.write("        <link rel=\"stylesheet\" href=\"css/common.css\">\n");
-      out.write("        <link rel=\"stylesheet\" href=\"css/player.css\">\n");
+      out.write("        <link rel=\"stylesheet\" href=\"css/playlist.css\">\n");
       out.write("        \n");
       out.write("    </head>\n");
       out.write("    <body>\n");
@@ -130,13 +117,86 @@ session.setAttribute("current-music", musicID);
       out.write("        </div>\n");
       out.write("\n");
       out.write("        <div class=\"container\">\n");
-      out.write("             \n");
+      out.write("            <div class=\"inside-container\">\n");
+      out.write("                <h1>MY MUSIC PLAYLIST</h1>\n");
+      out.write("                \n");
+      out.write("                \n");
+      out.write("\n");
+      out.write("                <div class=\"banner-container\">\n");
+      out.write("                    ");
+      out.write("\n");
+      out.write("                    ");
+
+                        System.out.println(Integer.toHexString(colorDec));
+                    for(int i = 0; i < musicList.size(); i++) {
+                        Music music = musicList.get(i);
+                    
+      out.write("\n");
+      out.write("                    <div class=\"music-banner\" onclick=\"goToMusic('");
+      out.print(music.getMusicID());
+      out.write("')\"  style=\"background-color: #");
+      out.print(Integer.toHexString(colorDec) );
+      out.write("\">\n");
+      out.write("                        \n");
+      out.write("                        <div class=\"column cover-column\">\n");
+      out.write("                            <div class=\"cover-image\"\n");
+      out.write("                            style=\"background: url('");
+      out.print( music.getCoverURL() );
+      out.write("'); background-position: center; background-size: cover;\"\n");
+      out.write("                            ></div>   \n");
+      out.write("                        </div> \n");
+      out.write("\n");
+      out.write("                        <div class=\"column details-column\">\n");
+      out.write("                            <h2>");
+      out.print(music.getMusicName() );
+      out.write("</h2>\n");
+      out.write("                            <h4>");
+      out.print(music.getArtistName() );
+      out.write("</h4>\n");
+      out.write("                        </div>\n");
+      out.write("\n");
+      out.write("                        <div class=\"column more-details\">\n");
+      out.write("                            <h3>");
+      out.print(music.getLanguage());
+      out.write("</h3>\n");
+      out.write("                        </div>\n");
+      out.write("\n");
+      out.write("                        <div class=\"column more-details\">\n");
+      out.write("                            <h3>");
+      out.print(music.getRating() );
+      out.write("</h3>\n");
+      out.write("                        </div>\n");
+      out.write("\n");
+      out.write("                        <div class=\"column end-column\">\n");
+      out.write("                            <img src=\"assets/icons/remove.png\" alt=\"remove-icon\" width=\"40px\">\n");
+      out.write("                        </div>\n");
+      out.write("\n");
+      out.write("                    </div>\n");
+      out.write("                     ");
+
+                        colorDec += 250;
+                        }
+                        
+      out.write("\n");
+      out.write("                </div>\n");
+      out.write("                    \n");
+      out.write("                   \n");
+      out.write("\n");
+      out.write("\n");
+      out.write("            </div>\n");
+      out.write("           \n");
       out.write("\n");
       out.write("        </div>\n");
       out.write("        \n");
       out.write("    </body>\n");
+      out.write("    <script>\n");
+      out.write("        function goToMusic(musicID) {\n");
+      out.write("            console.log(musicID)\n");
+      out.write("            window.location.href = `player.jsp?musicID=` + musicID\n");
+      out.write("        }\n");
       out.write("\n");
-      out.write("       \n");
+      out.write("    </script>\n");
+      out.write("   \n");
       out.write("</html>\n");
     } catch (Throwable t) {
       if (!(t instanceof SkipPageException)){

@@ -48,10 +48,7 @@
    /*flex: 1 1 0;*/
 }
 
-.navigation-elements a {
-    text-decoration: none;
-    color: inherit; 
-}
+
 
 .music-description {
     /* background-color: blue; */
@@ -108,4 +105,11 @@
 .volume-controller {
     display: flex;
     flex-direction: column;
+}
+
+.left-controller {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }

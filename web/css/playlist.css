@@ -1,0 +1,80 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jul 27, 2024, 9:06:38 AM
+    Author     : Sachindu Kavishka
+*/
+
+.inside-container {
+    width: 100%;
+    height: 100%;
+    /* background-color: red; */
+    padding: 80px 100px 0 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+.inside-container > h1 {
+    margin-bottom: 20px;
+    /* align-self: self-start; */
+}
+
+.banner-container {
+    width: 100%;
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+}
+
+.banner-container::-webkit-scrollbar {
+    display: none;
+}
+
+.music-banner {
+    width: 90%;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    background-color: #d17b0a;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.cover-image {
+    width: 60px;
+    aspect-ratio: 1;
+    border-radius: 100%;
+    background-color: red;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.cover-column {
+    flex: 0 0 calc(10%);
+    align-items: center;
+}
+
+.details-column {
+    flex: 0 0 calc(40%);
+}
+
+.more-details {
+    flex: 0 0 calc(20%);
+}
+
+.end-column {
+    flex: 1;
+    align-items: flex-end;
+    padding-right: 10px;
+}
