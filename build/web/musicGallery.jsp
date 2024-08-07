@@ -4,6 +4,8 @@
     Author     : Sachindu Kavishka
 --%>
 
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
 <%@page import="app.classes.User"%>
 <%@page import="app.classes.Music"%>
@@ -24,10 +26,10 @@ if(sessionValue.getAttribute("user") == null) {
 // New user object
 User user = (User)sessionValue.getAttribute("user");
 user.fetchUserDetails();
-    
-// Load all favoutite music 
-List<Music> musicList = Music.fetchFavouriteMusic(user.getUserID());
 
+
+Map<String, List<Music>> musicMap = Music.getAllMusic();
+Iterator iterator = musicMap.entrySet().iterator();
 %>
 
 
@@ -37,7 +39,8 @@ List<Music> musicList = Music.fetchFavouriteMusic(user.getUserID());
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>JSP Page</title>
         <link rel="stylesheet" href="css/common.css">
-        <link rel="stylesheet" href="css/playlist.css">
+        <link rel="stylesheet" href="css/music-gallery.css">
+        
         
     </head>
     <body>
@@ -72,51 +75,45 @@ List<Music> musicList = Music.fetchFavouriteMusic(user.getUserID());
 
         <div class="container">
             <div class="inside-container">
-                <h1>MY MUSIC PLAYLIST</h1>
+                <h1>MUSIC GALLERY</h1>
                 
+                <%
                 
+                for (Map.Entry<String, List<Music>> entry : musicMap.entrySet()) {
 
-                <div class="banner-container">
-                    <%!int colorDec;%>
-                    <%
-                    colorDec = 1127013;
-                    for(int i = 0; i < musicList.size(); i++) {
-                        Music music = musicList.get(i);
                     %>
-                    <div class="music-banner" style="background-color: #<%=Integer.toHexString(colorDec) %>">
+                
+                <div class="cat-container">
+                    <h3><%=entry.getKey()%></h3>
+                    <div class="row">
                         
-                        <div class="column cover-column">
-                            <div class="cover-image"
-                            style="background: url('<%= music.getCoverURL() %>'); background-position: center; background-size: cover;"
-                            ></div>   
-                        </div> 
+                        <%
+                            List<Music> musicList = entry.getValue();
+                            for(int i = 0; i < musicList.size(); i++) {
+                                Music music = musicList.get(i);
+                            
+                            %>
+                        <a href='player.jsp?musicID=<%=music.getMusicID()%>'>
+                        <div class="music-container" style="background: url('<%=music.getCoverURL()%>'); background-position: center; background-size: cover;">
 
-                        <div class="column details-column" onclick="goToMusic('<%=music.getMusicID()%>')"  >
-                            <h2><%=music.getMusicName() %></h2>
-                            <h4><%=music.getArtistName() %></h4>
-                        </div>
 
-                        <div class="column more-details">
-                            <h3><%=music.getLanguage()%></h3>
-                        </div>
-
-                        <div class="column more-details">
-                            <h3><%=music.getRating() %></h3>
-                        </div>
-
-                        <div class="column end-column">
-                            <button onclick="unSaveMusic('<%=music.getMusicID()%>')" style="background-color: transparent; border: 0">
-                                <img src="assets/icons/remove.png" alt="remove-icon" width="40px">
-                            </button>
+                            <div class="music-info">
+                                <h4><%=music.getMusicName()%></h4>
+                                <h5><%=music.getArtistName()%></h5>
+                            </div>
                             
                         </div>
+                        </a>
+                            <%}%>
+
+
+                       
 
                     </div>
-                     <%
-                        colorDec += 250;
-                        }
-                        %>
                 </div>
+                    
+                    <%}%>
+               
                     
                    
 

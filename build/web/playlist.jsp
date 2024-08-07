@@ -9,16 +9,20 @@
 <%@page import="app.classes.Music"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<%
+<%   
+    
 // Load current user
 String musicID = request.getParameter("musicID");
 HttpSession sessionValue = request.getSession();
 
-
-sessionValue.setAttribute("user_ID", "US0000000000000001");
+// Rediecting back to login page if session is not present
+if(sessionValue.getAttribute("user") == null) {
+    response.sendRedirect("index.jsp");
+    return;
+} 
 
 // New user object
-User user = new User((String)sessionValue.getAttribute("user_ID"));
+User user = (User)sessionValue.getAttribute("user");
 user.fetchUserDetails();
     
 // Load all favoutite music 
@@ -43,8 +47,8 @@ List<Music> musicList = Music.fetchFavouriteMusic(user.getUserID());
                 <img src="assets/icons/logo.png" alt="logo-image" width="50%"/>
             
                 <h2>MUSIC STREAMING</h2>
-                <h3><%=user.getEmail() %></h3>
                 <h4><%=user.getUserName() %></h4>
+                <h3><%=user.getEmail() %></h3>
                 <h5><%=user.getUserID() %></h5>
 
             </div>
@@ -62,7 +66,7 @@ List<Music> musicList = Music.fetchFavouriteMusic(user.getUserID());
             </div>
 
 
-            <button class="logout-btn">LOGOUT</button>
+                <button class="logout-btn" onclick="logout()">LOGOUT</button>
             
         </div>
 
@@ -134,6 +138,10 @@ List<Music> musicList = Music.fetchFavouriteMusic(user.getUserID());
             fetch('unsaveMusic.jsp?musicID=' + musicID + '&userID=' + '<%=user.getUserID() %>').then(success => {
                 window.location.href = 'playlist.jsp'
             })
+        }
+        
+        function logout() {
+            window.location.href = 'server/logout.jsp'
         }
 
     </script>

@@ -17,7 +17,7 @@
             
             stmt.executeUpdate();
         } catch(Exception e) {
-            
+            System.out.println(e);
         }
         
         %>
